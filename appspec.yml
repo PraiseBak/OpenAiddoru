@@ -1,0 +1,18 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ubuntu/aiddoru-backend
+file_exists_behavior: OVERWRITE
+permissions:
+  - object: /home/ubuntu/aiddoru-backend
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
+hooks:
+  AfterInstall:
+    - location: stopServer.sh
+      runas: ubuntu
+  ApplicationStart:
+    - location: startServer.sh
+      runas: ubuntu

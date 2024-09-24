@@ -1,0 +1,73 @@
+plugins {
+   id 'java'
+   id 'org.springframework.boot' version '3.1.1'
+   id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.aiddoru'
+version = '0.0.1-SNAPSHOT'
+
+java {
+   sourceCompatibility = '17'
+}
+
+configurations {
+   compileOnly {
+      extendsFrom annotationProcessor
+   }
+}
+
+repositories {
+   mavenCentral()
+}
+
+dependencies {
+   implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+   implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+   implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server'
+   implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+   implementation 'org.springframework.boot:spring-boot-starter-security'
+   implementation 'org.springframework.boot:spring-boot-starter-web'
+   implementation 'org.springframework.boot:spring-boot-starter-validation'
+   implementation 'org.springframework.boot:spring-boot-starter-mail'
+   annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+   implementation 'junit:junit:4.13.1'
+   compileOnly 'org.projectlombok:lombok'
+   developmentOnly 'org.springframework.boot:spring-boot-devtools'
+   implementation 'com.mysql:mysql-connector-j'
+   annotationProcessor 'org.projectlombok:lombok'
+   testImplementation 'org.springframework.boot:spring-boot-starter-test'
+   testImplementation 'org.springframework.security:spring-security-test'
+//   compileOnly 'com.google.api-client:google-api-client:1.23.0'
+//   compileOnly 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+//   compileOnly 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
+
+   implementation 'com.google.api-client:google-api-client:1.23.0'
+   implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+   implementation 'com.google.apis:google-api-services-youtube:v3-rev222-1.25.0'
+
+   implementation files("libs/TimeLog-1.1-SNAPSHOT.jar")
+   implementation files("libs/EasySimplemonitoring-0.1-SNAPSHOT.jar")
+
+   implementation 'javax.persistence:javax.persistence-api:2.2' // 사용하는 JPA 버전에 따라 버전을 조정하세요
+   implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+
+
+   implementation 'org.springframework.boot:spring-boot-starter-actuator'
+   implementation 'io.micrometer:micrometer-registry-prometheus'
+
+   implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
+   implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
+   implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
+   implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+}
+
+test {
+   useJUnitPlatform()
+}
+
+
+jar {
+   enabled = false
+}

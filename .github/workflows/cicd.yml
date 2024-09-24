@@ -1,0 +1,70 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  cicd:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3.1.0
+
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Create zip file
+        run: |
+          zip -r build/build-artifacts.zip build/libs/* Dockerfile docker-compose.yml appspec.yml startServer.sh stopServer.sh
+
+      - name: set mode for tar
+        run: chmod 775 build/build-artifacts.zip
+
+      - name: AWS configure credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+          aws-region: ap-northeast-2
+
+      - name: Upload to S3
+        run: aws s3 cp --region ap-northeast-2 build/build-artifacts.zip s3://aiddoru/aiddoru-server/
+
+      - name: Deploy with AWS CodeDeploy
+        id: deploy
+        run: |
+          deployment_id=$(aws deploy create-deployment \
+          --application-name aiddoru \
+          --deployment-config-name CodeDeployDefault.OneAtATime \
+          --deployment-group-name aiddoru-githubaction-deploy \
+          --s3-location bucket=aiddoru,bundleType=zip,key=aiddoru-server/build-artifacts.zip \
+          --query "deploymentId" --output text)
+          echo "deployment_id=$deployment_id" >> $GITHUB_ENV
+
+      - name: Wait for deployment to finish
+        run: |
+          while true; do
+          status=$(aws deploy get-deployment --deployment-id ${{ env.deployment_id }} --query "deploymentInfo.status" --output text)
+          if [ "$status" == "Succeeded" ]; then
+           echo "Deployment succeeded"
+           exit 0
+          elif [ "$status" == "Failed" ] || [ "$status" == "Stopped" ]; then
+           echo "Deployment failed with status: $status"
+           exit 1
+          else
+           echo "Deployment status: $status"
+           sleep 10
+          fi
+          done

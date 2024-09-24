@@ -1,0 +1,72 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+
+### dockerfile ###
+### application.properties ###
+#application.properties
+#compose.yaml
+### compose.yaml ###
+compose.yaml
+/node_modules/
+
+/aiddoru-front
+
+### log ###
+server-logs/
+
+aiddoru-data/
+mysql-data/
+aiddoru-data/**
+aiddoru-data-1/**
+aiddoru-data-2/**
+
+src/main/java/com/aiddoru/dev/Controller/TestController.java
+src/main/java/com/aiddoru/dev/Persistence/TestRepository.java
+src/main/java/com/aiddoru/dev/Persistence/TestUserRepository.java
+src/test/java/database/UserRepositoryTest.java
+
+
+src/main/resources/application-production.properties
+src/main/resources/application.properties
+src/main/resources/application-production.properties-backup
+
+
+
+src/test/java/resource/**
+

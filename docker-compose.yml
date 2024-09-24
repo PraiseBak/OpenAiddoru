@@ -1,0 +1,55 @@
+version: '3'
+services:
+  aiddoru:
+    build: .
+    image: praisebak/aiddoru_backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./server-logs:/app/logs
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/aiddoru
+      SPRING_DATASOURCE_USERNAME:
+      SPRING_DATASOURCE_PASSWORD:
+      SPRING_REDIS_HOST:
+      SPRING_REDIS_PORT:
+      SPRING_REDIS_PASSWORD:
+    depends_on:
+      - mysql
+      - redis
+  mysql:
+    image: mysql:8.2.0
+
+    environment:
+      MYSQL_DATABASE: aiddoru
+      MYSQL_PASSWORD:
+      MYSQL_ROOT_PASSWORD:
+    ports:
+      - '3306:3306'
+    volumes:
+      - ./aiddoru-data:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    environment:
+      REDIS_PASSWORD:
+    command: redis-server --requirepass
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - aiddoru
+volumes:
+  prometheus:
+  redis-data:

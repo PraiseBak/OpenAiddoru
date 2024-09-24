@@ -1,0 +1,1 @@
+cd /home/ubuntu/aiddoru-backend && docker compose down
